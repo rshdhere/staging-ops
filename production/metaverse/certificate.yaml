@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: metaverse-tls
+  namespace: metaverse
+spec:
+  secretName: metaverse-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - metaverse.example.com
+  privateKey:
+    algorithm: RSA
+    size: 2048
