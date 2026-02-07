@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: metaverse-ingress
+  namespace: metaverse
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    # WebSocket support for /ws
+    nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
+    nginx.ingress.kubernetes.io/upstream-hash-by: "$remote_addr"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - metaverse.example.com
+      secretName: metaverse-tls
+  rules:
+    - host: metaverse.example.com
+      http:
+        paths:
+          # WebSocket layer - must be before /api so /ws is matched first
+          - path: /ws
+            pathType: Prefix
+            backend:
+              service:
+                name: metaverse-websocket
+                port:
+                  number: 8080
+          # Backend API
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: metaverse-backend
+                port:
+                  number: 3000
+          # Frontend (client) - catch-all
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: metaverse-frontend
+                port:
+                  number: 80
