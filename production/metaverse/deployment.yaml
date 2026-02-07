@@ -94,9 +94,11 @@ spec:
         - name: backend
           image: rshdhere/metaverse-backend:latest
           imagePullPolicy: Always
+
           ports:
             - name: http
               containerPort: 8082
+
           resources:
             requests:
               memory: "256Mi"
@@ -104,18 +106,20 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: http
-            initialDelaySeconds: 15
-            periodSeconds: 10
+
+          # NO /health endpoint → use TCP probe
           readinessProbe:
-            httpGet:
-              path: /health
-              port: http
+            tcpSocket:
+              port: 8082
             initialDelaySeconds: 5
             periodSeconds: 5
+
+          livenessProbe:
+            tcpSocket:
+              port: 8082
+            initialDelaySeconds: 15
+            periodSeconds: 10
+
           envFrom:
             - secretRef:
                 name: metaverse-backend-prod
