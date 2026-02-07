@@ -15,10 +15,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - metaverse.raashed.xyz
+        - k8s-metaverse.raashed.xyz
       secretName: metaverse-tls
   rules:
-    - host: metaverse.raashed.xyz
+    - host: k8s-metaverse.raashed.xyz
       http:
         paths:
           # WebSocket layer - must be before /api so /ws is matched first
