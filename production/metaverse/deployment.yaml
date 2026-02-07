@@ -1,0 +1,206 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: metaverse
+  labels:
+    app.kubernetes.io/name: metaverse
+    app.kubernetes.io/part-of: metaverse
+---
+# Metaverse Frontend (client)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metaverse-frontend
+  namespace: metaverse
+  labels:
+    app: metaverse-frontend
+    component: client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metaverse-frontend
+  template:
+    metadata:
+      labels:
+        app: metaverse-frontend
+        component: client
+    spec:
+      containers:
+        - name: frontend
+          image: rshdhere/metaverse-frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3001
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metaverse-frontend
+  namespace: metaverse
+  labels:
+    app: metaverse-frontend
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+  selector:
+    app: metaverse-frontend
+---
+# Metaverse Backend (server)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metaverse-backend
+  namespace: metaverse
+  labels:
+    app: metaverse-backend
+    component: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metaverse-backend
+  template:
+    metadata:
+      labels:
+        app: metaverse-backend
+        component: server
+    spec:
+      containers:
+        - name: backend
+          image: rshdhere/metaverse-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8082
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          envFrom:
+            - secretRef:
+                name: metaverse-secrets
+                optional: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metaverse-backend
+  namespace: metaverse
+  labels:
+    app: metaverse-backend
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8082
+      targetPort: http
+      protocol: TCP
+  selector:
+    app: metaverse-backend
+---
+# Metaverse WebSocket layer
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metaverse-websocket
+  namespace: metaverse
+  labels:
+    app: metaverse-websocket
+    component: ws
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metaverse-websocket
+  template:
+    metadata:
+      labels:
+        app: metaverse-websocket
+        component: ws
+    spec:
+      containers:
+        - name: websocket
+          image: rshdhere/metaverse-websocket:latest
+          imagePullPolicy: Always
+          ports:
+            - name: ws
+              containerPort: 8083
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            tcpSocket:
+              port: ws
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: ws
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          envFrom:
+            - secretRef:
+                name: metaverse-secrets
+                optional: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metaverse-websocket
+  namespace: metaverse
+  labels:
+    app: metaverse-websocket
+spec:
+  type: ClusterIP
+  ports:
+    - name: ws
+      port: 8083
+      targetPort: ws
+      protocol: TCP
+  selector:
+    app: metaverse-websocket
