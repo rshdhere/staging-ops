@@ -15,10 +15,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - metaverse.example.com
+        - metaverse.raashed.xyz
       secretName: metaverse-tls
   rules:
-    - host: metaverse.example.com
+    - host: metaverse.raashed.xyz
       http:
         paths:
           # WebSocket layer - must be before /api so /ws is matched first
@@ -28,7 +28,7 @@ spec:
               service:
                 name: metaverse-websocket
                 port:
-                  number: 8080
+                  number: 8083
           # Backend API
           - path: /api
             pathType: Prefix
@@ -36,7 +36,7 @@ spec:
               service:
                 name: metaverse-backend
                 port:
-                  number: 3000
+                  number: 8082
           # Frontend (client) - catch-all
           - path: /
             pathType: Prefix
@@ -44,4 +44,4 @@ spec:
               service:
                 name: metaverse-frontend
                 port:
-                  number: 80
+                  number: 3001
