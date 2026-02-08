@@ -101,7 +101,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: rshdhere/metaverse-backend:98b50e02263ea3109b00f763ec48f3d232d94f26
+          image: rshdhere/metaverse-backend:321bf765387d85f60bf8f19fb3a94edef9aee3bd
           imagePullPolicy: Always
           ports:
             - name: http
