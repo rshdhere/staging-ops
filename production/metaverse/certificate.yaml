@@ -9,7 +9,4 @@ spec:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-    - metaverse.example.com
-  privateKey:
-    algorithm: RSA
-    size: 2048
+    - k8s-metaverse.raashed.xyz
