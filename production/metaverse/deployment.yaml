@@ -221,8 +221,8 @@ spec:
             periodSeconds: 5
           envFrom:
             - secretRef:
-                name: metaverse-secrets
-                optional: true
+                name: metaverse-backend-prod
+                optional: false
 ---
 apiVersion: v1
 kind: Service
