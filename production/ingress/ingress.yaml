@@ -51,6 +51,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: metaverse-ws
+                name: metaverse-websocket
                 port:
                   number: 8083
