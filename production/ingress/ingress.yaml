@@ -47,10 +47,10 @@ spec:
     - host: k8s-game.raashed.xyz
       http:
         paths:
-          - path: /
+          - path: /ws
             pathType: Prefix
             backend:
               service:
                 name: metaverse-ws
                 port:
-                  number: 8080
+                  number: 8083
