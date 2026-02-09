@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: rshdhere/metaverse-frontend:b3a6e8272a71c43021e32a147faae066e6b4093a
+          image: rshdhere/metaverse-frontend:8926cbc309c0d4d2ce95628bae26387661629ccc
           imagePullPolicy: Always
           ports:
             - name: http
@@ -104,7 +104,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet  # Required with hostNetwork
       containers:
         - name: backend
-          image: rshdhere/metaverse-backend:b3a6e8272a71c43021e32a147faae066e6b4093a
+          image: rshdhere/metaverse-backend:8926cbc309c0d4d2ce95628bae26387661629ccc
           imagePullPolicy: Always
           ports:
             - name: http
@@ -197,7 +197,7 @@ spec:
     spec:
       containers:
         - name: websocket
-          image: rshdhere/metaverse-websocket:b3a6e8272a71c43021e32a147faae066e6b4093a
+          image: rshdhere/metaverse-websocket:8926cbc309c0d4d2ce95628bae26387661629ccc
           imagePullPolicy: Always
           ports:
             - name: ws
