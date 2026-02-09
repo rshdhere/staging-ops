@@ -5,40 +5,26 @@ metadata:
   namespace: metaverse
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
-    nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
-    nginx.ingress.kubernetes.io/upgrade: "websocket"
-    nginx.ingress.kubernetes.io/connection: "Upgrade"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-
 spec:
   ingressClassName: nginx
+
   tls:
     - hosts:
         - k8s-metaverse.raashed.xyz
-      secretName: metaverse-tls
+      secretName: metaverse-ui-tls
+
+    - hosts:
+        - k8s-game-server.raashed.xyz
+      secretName: game-server-tls
+
+    - hosts:
+        - k8s-game.raashed.xyz
+      secretName: metaverse-ws-tls
 
   rules:
     - host: k8s-metaverse.raashed.xyz
       http:
         paths:
-          - path: /ws
-            pathType: Prefix
-            backend:
-              service:
-                name: metaverse-websocket
-                port:
-                  number: 8083
-
-          - path: /api
-            pathType: Prefix
-            backend:
-              service:
-                name: metaverse-backend
-                port:
-                  number: 8082
-
           - path: /
             pathType: Prefix
             backend:
@@ -46,3 +32,25 @@ spec:
                 name: metaverse-frontend
                 port:
                   number: 80
+
+    - host: k8s-game-server.raashed.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: metaverse-backend
+                port:
+                  number: 8082
+
+    - host: k8s-game.raashed.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: metaverse-ws
+                port:
+                  number: 8080
