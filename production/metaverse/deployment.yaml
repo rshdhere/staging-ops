@@ -117,6 +117,9 @@ spec:
 
             - name: RUNTIME
               value: "kubernetes"
+            
+            - name: MEDIASOUP_ANNOUNCED_IP
+              value: ""
 
           envFrom:
             - secretRef:
