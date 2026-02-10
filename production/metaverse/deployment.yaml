@@ -134,9 +134,6 @@ spec:
               cpu: "500m"
 
 ---
-# Backend Service
-# Note: UDP ports 40000-40100 are exposed directly via hostNetwork
-# Clients connect to node IP (139.59.53.27) for WebRTC/mediasoup
 apiVersion: v1
 kind: Service
 metadata:
