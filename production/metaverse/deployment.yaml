@@ -71,46 +71,33 @@ spec:
     app: metaverse-frontend
 ---
 # Metaverse Backend (server)
-# Uses hostNetwork for mediasoup UDP RTP port access
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: metaverse-backend
   namespace: metaverse
-  labels:
-    app: metaverse-backend
-    component: server
 spec:
-  revisionHistoryLimit: 2
-  replicas: 1  # Must be 1 when using hostNetwork
-
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
-
+  replicas: 1
   selector:
     matchLabels:
       app: metaverse-backend
-
   template:
     metadata:
       labels:
         app: metaverse-backend
-        component: server
     spec:
-      hostNetwork: true  # Required for mediasoup UDP ports
-      dnsPolicy: ClusterFirstWithHostNet  # Required with hostNetwork
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+
       containers:
         - name: backend
           image: rshdhere/metaverse-backend:ea1fee3f482661a62d505e95b9ec90dc88527bd2
           imagePullPolicy: Always
+
           ports:
             - name: http
               containerPort: 8082
               protocol: TCP
-            # UDP RTP ports for mediasoup
             - name: rtc-udp-start
               containerPort: 40000
               protocol: UDP
@@ -121,17 +108,19 @@ spec:
           env:
             - name: PORT
               value: "8082"
+
             - name: MEDIASOUP_RTC_MIN_PORT
               value: "40000"
+
             - name: MEDIASOUP_RTC_MAX_PORT
               value: "40100"
-            - name: MEDIASOUP_ANNOUNCED_IP
-              value: "139.59.53.27"  # K8s node public IP
+
+            - name: RUNTIME
+              value: "kubernetes"
 
           envFrom:
             - secretRef:
                 name: metaverse-backend-prod
-                optional: false
 
           resources:
             requests:
@@ -140,19 +129,6 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
-
-          # No HTTP health endpoint → use TCP probe
-          livenessProbe:
-            tcpSocket:
-              port: http
-            initialDelaySeconds: 20
-            periodSeconds: 10
-
-          readinessProbe:
-            tcpSocket:
-              port: http
-            initialDelaySeconds: 10
-            periodSeconds: 5
 
 ---
 # Backend Service
