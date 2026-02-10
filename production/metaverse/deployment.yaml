@@ -70,7 +70,7 @@ spec:
   selector:
     app: metaverse-frontend
 ---
-# Metaverse Backend (server)
+# Metaverse Backend (server + mediasoup)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -117,9 +117,11 @@ spec:
 
             - name: RUNTIME
               value: "kubernetes"
-            
+
             - name: MEDIASOUP_ANNOUNCED_IP
-              value: ""
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.annotations['node.kubernetes.io/external-ip']
 
           envFrom:
             - secretRef:
@@ -132,7 +134,6 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
-
 ---
 apiVersion: v1
 kind: Service
