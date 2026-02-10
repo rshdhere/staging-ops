@@ -118,10 +118,10 @@ spec:
             - name: RUNTIME
               value: "kubernetes"
 
-            - name: MEDIASOUP_ANNOUNCED_IP
+            - name: K8S_NODE_NAME
               valueFrom:
                 fieldRef:
-                  fieldPath: metadata.annotations['node.kubernetes.io/external-ip']
+                  fieldPath: spec.nodeName
 
           envFrom:
             - secretRef:
