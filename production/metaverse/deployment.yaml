@@ -56,7 +56,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: rshdhere/metaverse-frontend:c7ce6f4d9cff8aa8521a5f0f5312a60a90aa3af4
+          image: rshdhere/metaverse-frontend:581083b9c1c71c26be03ec5024ea1dd3f1b64bba
           imagePullPolicy: Always
           ports:
             - name: http
@@ -139,7 +139,7 @@ spec:
 
       containers:
         - name: backend
-          image: rshdhere/metaverse-backend:c7ce6f4d9cff8aa8521a5f0f5312a60a90aa3af4
+          image: rshdhere/metaverse-backend:581083b9c1c71c26be03ec5024ea1dd3f1b64bba
           imagePullPolicy: Always
           command: ["/bin/sh", "-c"]
           args:
@@ -236,7 +236,7 @@ spec:
     spec:
       containers:
         - name: websocket
-          image: rshdhere/metaverse-websocket:c7ce6f4d9cff8aa8521a5f0f5312a60a90aa3af4
+          image: rshdhere/metaverse-websocket:581083b9c1c71c26be03ec5024ea1dd3f1b64bba
           imagePullPolicy: Always
           ports:
             - name: ws
