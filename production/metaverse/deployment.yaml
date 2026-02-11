@@ -119,7 +119,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       initContainers:
         - name: resolve-node-external-ip
-          image: registry.k8s.io/kubectl:v1.34.1
+          image: bitnami/kubectl@sha256:4c5f63828f5170142d714cdf1f96bad9e223f7ad79bd67d6d6b21e59a188c514
           imagePullPolicy: IfNotPresent
           command: ["/bin/sh", "-c"]
           args:
