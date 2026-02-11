@@ -124,7 +124,7 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              set -euo pipefail
+              set -eu
               EXT_IP="$(kubectl get node "${K8S_NODE_NAME}" -o jsonpath='{.status.addresses[?(@.type=="ExternalIP")].address}')"
               test -n "${EXT_IP}" || { echo "ExternalIP not found for ${K8S_NODE_NAME}" >&2; exit 1; }
               echo -n "${EXT_IP}" > /work/node_external_ip
@@ -144,7 +144,7 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              set -euo pipefail
+              set -eu
               export K8S_NODE_EXTERNAL_IP="$(cat /work/node_external_ip)"
               export MEDIASOUP_ANNOUNCED_IP="${K8S_NODE_EXTERNAL_IP}"
               echo "[startup] node=${K8S_NODE_NAME} announced=${MEDIASOUP_ANNOUNCED_IP}"
